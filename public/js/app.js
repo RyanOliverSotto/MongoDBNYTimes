@@ -30,7 +30,7 @@ $(document).on("click", "p", function() {
       // A textarea to add a new note body
       $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
       // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      $("#notes").append("<button article-data-id='" + data._id + "' id='savenote'>Save Note</button>");
 
       // If there's a note in the article
       if (data.note) {
@@ -38,6 +38,7 @@ $(document).on("click", "p", function() {
         $("#titleinput").val(data.note.title);
         // Place the body of the note in the body textarea
         $("#bodyinput").val(data.note.body);
+        $("#notes").append("<button note-data-id='" + data.note._id + "' id='deletenote'>Delete Note</button>");
       }
     });
 });
@@ -45,7 +46,7 @@ $(document).on("click", "p", function() {
 // When you click the savenote button
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button
-  var thisId = $(this).attr("data-id");
+  var thisId = $(this).attr("article-data-id");
 
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
@@ -70,3 +71,22 @@ $(document).on("click", "#savenote", function() {
   $("#titleinput").val("");
   $("#bodyinput").val("");
 });
+
+// When you click the savenote button
+$(document).on("click", "#deletenote", function() {
+  // Grab the id associated with the article from the submit button
+  var articleId = $("#savenote").attr("article-data-id");
+  var noteId = $(this).attr("note-data-id");
+  console.log(`ArticleId: ${articleId}`);
+  console.log(`NotesId: ${noteId}`);
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "DELETE",
+    url: "/notes/delete/" + noteId + "/" + articleId
+  }).done(function(data) {
+    console.log(data)
+    $("#notes").empty();
+    window.location = "/"
+})
+});
+

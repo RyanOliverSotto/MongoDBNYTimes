@@ -13,10 +13,12 @@ $(document).on("click", "#scrape", function() {
 
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
+
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
     $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    $("#articles").append("<button data-id='" + data[i]._id + "' id='deletearticle' class='btn btn-info'>Delete Article</button>")
   }
 });
 
@@ -54,6 +56,20 @@ $(document).on("click", "p", function() {
         $("#notes").append("<button note-data-id='" + data.note._id + "' id='deletenote'>Delete Note</button>");
       }
     });
+});
+
+
+
+//Handle Delete Article button
+$(document).on("click", "#deletearticle", function() {
+  var thisId = $(this).attr("data-id");
+  console.log(`Id: ${thisId}`);
+  $.ajax({
+      method: "DELETE",
+      url: "/articles/delete/" + thisId
+  }).done(function(data) {
+      window.location = "/"
+  })
 });
 
 // When you click the savenote button

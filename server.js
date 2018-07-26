@@ -50,7 +50,7 @@ app.get("/scrape", function(req, res) {
       result.link = $(this)
         .children("a")
         .attr("href");
-
+      
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
         .then(function(dbArticle) {
@@ -99,6 +99,8 @@ app.get("/articles/:id", function(req, res) {
     });
 });
 
+
+
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
@@ -146,6 +148,23 @@ app.delete("/notes/delete/:note_id/:article_id", function(req, res) {
   });
 });
 
+// Delete an article
+app.delete("/articles/delete/:article_id", function(req, res) {
+  // Use the note id to find and delete it
+  db.Article.findOneAndRemove({ "_id": req.params.article_id }, function(err) {
+    // Log any errors
+    if (err) {
+      console.log(err);
+      res.send(err);
+    }
+    else {
+
+            // Or send the note to the browser
+            res.send("Note Deleted");
+          }
+        });
+    
+  });
 
 
 // Start the server

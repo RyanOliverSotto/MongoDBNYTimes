@@ -1,3 +1,16 @@
+// When you click the savenote button
+$(document).on("click", "#scrape", function() {
+  console.log ("Scrape was clicked");
+  //Handle Scrape button
+  $.ajax({
+      method: "GET",
+      url: "/scrape",
+  }).done(function(data) {
+      console.log(data)
+      window.location = "/"
+  })
+});
+
 // Grab the articles as a json
 $.getJSON("/articles", function(data) {
   // For each one
